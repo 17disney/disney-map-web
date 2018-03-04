@@ -14,6 +14,4 @@ export default {
 body{
   margin: 0px;
 }
-.container{
-}
 </style>
