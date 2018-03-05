@@ -1,12 +1,22 @@
 <template>
   <div>
-    <mt-navbar class="map-navbar" v-model="attTypeTab.selectedId">
+    <mt-navbar v-show="!hideTools" class="map-navbar" v-model="attTypeTab.selectedId">
       <mt-tab-item v-for="item in attTypeTab.list" :key="item.name" :id="item.id">{{item.name}}</mt-tab-item>
     </mt-navbar>
     <div class="map-warp">
       <v-map :crs="crs" ref="map" :zoom="18" :min-zoom=5 :max-zoom=18 :center="center">
         <v-marker v-for="item in list" :icon="icon" :key="item.id" :lat-lng="item.coordinates">
-          <v-popup :options="popupOption" :content="item.name"></v-popup>
+          <v-popup :options="popupOption" :content="`
+            <div class='inner'>
+              <div class='att-popup__avatar'>
+                <img src='${item.finderListMobileSquare.url}' >
+              </div>
+              <div class='att-popup__body'>
+                <h3 class='att-popup__title'>${item.name}</h3>
+                <p class='att-popup__desc'>${item.landName}</p>
+              </div>
+            </div>
+            `"></v-popup>
         </v-marker>
       </v-map>
     </div>
@@ -14,11 +24,11 @@
 </template>
 
 <script>
-import { attTypeTab } from '@/common/park-arr'
+import { attTypeTab, attTypeIcon } from '@/common/park-arr'
+console.log(attTypeIcon)
 import { mapActions, mapState } from 'vuex'
 import crsBaidu from '@/lib/crs.baidu'
 import L from 'leaflet'
-
 L.TileLayer.WebDogTileLayer = L.TileLayer.extend({
   getTileUrl: function (tilePoint) {
     var urlArgs,
@@ -51,8 +61,9 @@ export default {
       }
     }),
     icon() {
-      return L.icon({
-        iconUrl: '../images/marker-icon.png'
+      return L.divIcon({
+        className: 'marker-att icon--pep icon__' + attTypeIcon[this.attTypeTab.selectedId],
+        popupAnchor: [12, 42],
         // iconSize: [40, 40],
         // iconAnchor: [20, 20]
       })
@@ -60,6 +71,7 @@ export default {
   },
   data() {
     return {
+      hideTools: false,
       center: [31.1492, 121.6667],
       attTypeTab,
       crs: crsBaidu,
@@ -67,7 +79,9 @@ export default {
       popupOption: {
         autoClose: false,
         closeButton: false,
-        closeOnClick: false
+        minWidth: 300,
+        className: 'att-popup'
+        // closeOnClick: false
       },
       tilelayerOptions: {
         tms: true
@@ -75,8 +89,7 @@ export default {
     }
   },
   watch: {
-    'attTypeTab.selectedId': function (nVal, oVal)  {
-      console.log(this)
+    'attTypeTab.selectedId': function (nVal, oVal) {
       this.$store.dispatch('getDestinationsList', nVal)
     }
   },
@@ -113,11 +126,11 @@ export default {
 </script>
 
 <style lang="less">
-.map-warp {
-  position: absolute;
-  top: 50px;
+.map-navbar{
+  z-index: 1;
   left: 0px;
-  right: 0px;
-  bottom: 0px;
+  width: 100%;
+  position: absolute;
 }
+
 </style>

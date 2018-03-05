@@ -16,7 +16,7 @@ const user = {
   },
   actions: {
     // 获取项目列表
-    async getDestinationsList ({ commit, state }, type) {
+    async getDestinationsList({ commit, state }, type) {
       let key = `destinationsList-${type}`
       let data = await parkApi.explorerDestinations(state.local, type)
 
@@ -30,7 +30,10 @@ const user = {
           }
         }
 
-        item.coordinates = []
+        item.type = item.type.toLowerCase()
+
+        // 提取坐标
+        item.coordinates = [0, 0]
         if (
           item.relatedLocations &&
           item.relatedLocations[0] &&
@@ -39,17 +42,18 @@ const user = {
         ) {
           let coordinates = item.relatedLocations[0]['coordinates'][0]
           let { latitude, longitude } = coordinates
-
-          let correct = [12.0424, 49.0037]
-
-          coordinates = [latitude, longitude].map((_, i) => {
-            return parseFloat(_)
-          })
+          coordinates = [latitude, longitude].map(parseFloat)
+          coordinates[0] = coordinates[0] + 0.0003
+          coordinates[1] = coordinates[1] - 0.0001
           // coordinates = coordtransform.bd09togcj02(...coordinates)
-
           item.coordinates = coordinates
         }
-        item.type = item.type.toLowerCase()
+
+        item.finderListMobileSquare = item.medias.filter(_ => {
+          return _.type === 'finderListMobileSquare'
+        })[0]
+
+
       })
       // this.updateCache(key, data)
       commit('SET_LIST', data)
