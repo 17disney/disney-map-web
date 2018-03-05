@@ -79,3 +79,27 @@
     }
   }
 }
+
+.map-btn-float{
+  display: flex;
+  position: fixed;
+  right: 16px;
+  bottom: 8px;
+  z-index: 100;
+  background-color: fade(@dsLinkColorDefault, 90%);
+  border-radius: 24px;
+  .btn{
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+    color: #FFF;
+    text-align: center;
+    transition: .5s;
+    &:active{
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .icon--pep{
+      line-height: 48px;
+    }
+  }
+}

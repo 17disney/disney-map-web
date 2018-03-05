@@ -8,8 +8,8 @@ import store from './store'
 
 import 'mint-ui/lib/style.css'
 import 'leaflet/dist/leaflet.css'
-import '@/css/iconfont.css'
-import '@/css/pepmdx-icons.css'
+import '@/style/iconfont.css'
+import '@/style/pepmdx-icons.css'
 import '@/style/disney/index.less'
 
 // Vue.config.productionTip = false

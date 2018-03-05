@@ -1,12 +1,32 @@
+<style lang="less">
+.map-navbar {
+  z-index: 1;
+  left: 0px;
+  width: 100%;
+  position: absolute;
+}
+</style>
+
 <template>
   <div>
     <mt-navbar v-show="!hideTools" class="map-navbar" v-model="attTypeTab.selectedId">
       <mt-tab-item v-for="item in attTypeTab.list" :key="item.name" :id="item.id">{{item.name}}</mt-tab-item>
     </mt-navbar>
-    <div class="map-warp">
-      <v-map :crs="crs" ref="map" :zoom="18" :min-zoom=5 :max-zoom=18 :center="center">
-        <v-marker v-for="item in list" :icon="icon" :key="item.id" :lat-lng="item.coordinates">
-          <v-popup :options="popupOption" :content="`
+    <div class="map-btn-float">
+      <a class="btn">
+        <icon name="refresh"></icon>
+      </a>
+      <a @click="showMode = 'list'" class="btn" v-if="showMode=='map'">
+        <icon name="lists"></icon>
+      </a>
+      <a @click="showMode = 'map'" class="btn" v-if="showMode=='list'">
+        <icon name="maps"></icon>
+      </a>
+    </div>
+    <div v-show="showMode == 'map'" class="map-warp">
+      <v-map :crs="crsBaidu" ref="map" :zoom="18" :min-zoom=5 :max-zoom=18 :center="center">
+        <v-marker  v-for="item in list" :icon="icon" :key="item.id" :lat-lng="item.coordinates">
+          <v-popup @click="attClick(item.id)" :options="popupOption" :content="`
             <div class='inner'>
               <div class='att-popup__avatar'>
                 <img src='${item.finderListMobileSquare.url}' >
@@ -20,45 +40,31 @@
         </v-marker>
       </v-map>
     </div>
+    <div v-show="showMode == 'list'" class="att-list-warp">
+      <att-list :waits="waits" :list="list" :schedules="schedules"></att-list>
+    </div>
   </div>
 </template>
 
 <script>
 import { attTypeTab, attTypeIcon } from '@/common/park-arr'
-console.log(attTypeIcon)
+import icon from '@/components/icon'
+import attList from '@/components/att-list'
 import { mapActions, mapState } from 'vuex'
 import crsBaidu from '@/lib/crs.baidu'
-import L from 'leaflet'
-L.TileLayer.WebDogTileLayer = L.TileLayer.extend({
-  getTileUrl: function (tilePoint) {
-    var urlArgs,
-      getUrlArgs = this.options.getUrlArgs
-
-    if (getUrlArgs) {
-      var urlArgs = getUrlArgs(tilePoint)
-    } else {
-      urlArgs = {
-        z: tilePoint.z,
-        x: tilePoint.x,
-        y: tilePoint.y
-      }
-    }
-    return L.Util.template(this._url, L.extend(urlArgs, this.options, { s: this._getSubdomain(tilePoint) }))
-  }
-})
-
-L.tileLayer.webdogTileLayer = function (url, options) {
-  return new L.TileLayer.WebDogTileLayer(url, options)
-}
+import webdogTileLayer from '@/lib/webdogTileLayer'
+import { handleId } from '@/utils/tool'
 
 export default {
   name: 'Index',
+  components: {
+    icon, attList
+  },
   computed: {
     ...mapState({
-      list: state => {
-        let list = state.park.list
-        return list
-      }
+      list: state => state.park.list,
+      waits: state => state.park.waits,
+      schedules: state => state.park.schedules,
     }),
     icon() {
       return L.divIcon({
@@ -71,11 +77,11 @@ export default {
   },
   data() {
     return {
-      hideTools: false,
-      center: [31.1492, 121.6667],
       attTypeTab,
-      crs: crsBaidu,
-      map: {},
+      crsBaidu,
+      hideTools: false,
+      showMode: 'map',
+      center: [31.1492, 121.6667],
       popupOption: {
         autoClose: false,
         closeButton: false,
@@ -96,7 +102,13 @@ export default {
   methods: {
     ...mapActions([
       'getDestinationsList'
-    ])
+    ]),
+    attClick(id) {
+      let [__id__, entityType, destination] = handleId(id)
+      let url = `att?id=${__id__}&entityType=${entityType}&destination=${destination}`
+      console.log(url)
+      wx.miniProgram.navigateTo({url})
+    }
   },
   mounted() {
     // let map = L.map('mapid', {
@@ -117,20 +129,13 @@ export default {
         }
       }
     }
-    L.tileLayer.webdogTileLayer(url, options).addTo(map)
+    webdogTileLayer(url, options).addTo(map)
   },
   created() {
     this.$store.dispatch('getDestinationsList', 'attraction')
+    this.$store.dispatch('getAttractionsWait')
+    this.$store.dispatch('getSchedules')
   }
 }
 </script>
 
-<style lang="less">
-.map-navbar{
-  z-index: 1;
-  left: 0px;
-  width: 100%;
-  position: absolute;
-}
-
-</style>

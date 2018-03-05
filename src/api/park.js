@@ -1,5 +1,5 @@
 import request from './request'
-let version = 'v2'
+let version = 'v3'
 
 let base = `https://park-cn.17disney.com/api/${version}`
 let cdn = `https://park-explorer.17disney.com`
