@@ -1,5 +1,5 @@
 <template>
-  <div class="attlist-warp">
+  <div>
     <div v-for="item in list" @click="clickAtt(item.id)" class="attlist-box">
       <div class="attlist-box__hd">
         <img class="attlist-box__thumb radius" :src="item.finderListMobileSquare.url">
@@ -19,24 +19,7 @@
             </div>
           </div>
         </div>
-
-        <div v-if="waits[item.aid] && waits[item.aid]['waitList']">
-          <div class="attlist-box__wait" v-if="waits[item.aid].status == 'Operating'">
-            等候
-            <text class="strong">{{waits[item.aid].waitList[0][1] || 0}}</text>分钟
-          </div>
-          <div class="attlist-box__wait color_warn" v-else>
-            已关闭
-          </div>
-          <div v-if="waits[item.aid].fpList">
-            <div class="attlist-box__fp" v-if="waits[item.aid].fpStatus">
-              FP 使用时间： {{waits[item.aid].fpStartTime}} 至 {{waits[item.aid].fpEndTime}}
-            </div>
-            <div class="attlist-box__fp color_warn" v-else>
-              FP 已领完
-            </div>
-          </div>
-        </div>
+        <attWaittime :item="item" :wait="waits[item.aid]"></attWaittime>
       </div>
     </div>
   </div>
@@ -46,6 +29,7 @@
 <script>
 import moment from 'moment'
 import { handleId } from '@/utils/tool'
+import attWaittime from '@/components/att-waittime'
 
 export default {
   props: {
@@ -66,6 +50,7 @@ export default {
   },
 
   components: {
+    attWaittime
   },
 
   computed: {},

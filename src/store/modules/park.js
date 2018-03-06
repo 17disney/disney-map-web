@@ -3,6 +3,7 @@ import moment from 'moment'
 import { lineToObject } from '@/utils/tool'
 import { landName } from '@/utils/filter'
 import coordtransform from '@/utils/coordtransform'
+import { attTypeTab, attTypeIcon } from '@/common/park-arr'
 
 const user = {
   state: {
@@ -14,21 +15,6 @@ const user = {
   },
   mutations: {
     SET_LIST: (state, data) => {
-      state.list = data
-    },
-    SET_WAITS: (state, data) => {
-      state.waits = data
-    },
-    SET_SCHEDULES: (state, data) => {
-      state.schedules = data
-    },
-  },
-  actions: {
-    // 获取项目列表
-    async getDestinationsList({ commit, state }, type) {
-      // let key = `destinationsList-${type}`
-      let data = await parkApi.explorerDestinations(state.local, type)
-
       data.forEach(item => {
         let { id, ancestors } = item
         item.aid = lineToObject(id)['__id__']
@@ -40,7 +26,6 @@ const user = {
         }
 
         item.type = item.type.toLowerCase()
-
         // 提取坐标
         item.coordinates = [0, 0]
         if (
@@ -62,17 +47,19 @@ const user = {
         item.finderListMobileSquare = item.medias.filter(_ => {
           return _.type === 'finderListMobileSquare'
         })[0]
-      })
-      // this.updateCache(key, data)
-      commit('SET_LIST', data)
-    },
 
-    // 获取等待时间
-    async getAttractionsWait({ commit, state }) {
-      let waitList = await parkApi.waitTimsAttractions(state.local, state.date)
-      console.log(waitList)
-      let data = {}
-      waitList.forEach(item => {
+        item.icon = L.divIcon({
+          className:
+            'att-marker att-marker--icon icon--pep icon__' +
+            attTypeIcon[item.type],
+          popupAnchor: [12, 42]
+        })
+      })
+      state.list = data
+    },
+    SET_WAITS: (state, data) => {
+      let waits = {}
+      data.forEach(item => {
         let { fpList, waitList, endTime } = item
 
         if (fpList && fpList.length > 0) {
@@ -101,14 +88,33 @@ const user = {
           item.utime = utime
           item.postedWaitMinutes = postedWaitMinutes
         }
-        data[item.id] = item
+        waits[item.id] = item
       })
-      commit('SET_WAITS', data)
-    },
 
-    // 获取时间表
-    async getSchedules({ commit, state }) {
-      let data = await parkApi.explorerSchedules(state.local, state.date)
+      let { list } = state
+      list.forEach(item => {
+        let wait = waits[item.aid]
+        if (wait && wait['waitList']) {
+          item.icon = L.divIcon({
+            className: 'att-marker att-marker--wait',
+            popupAnchor: [17, 57],
+            html: `
+              <div class="att-marker__content">
+                <div class="att-marker__desc">等候</div>
+                <div class="att-marker__num">${wait.waitList[0][1]}</div>
+                <div class="att-marker__desc">分钟</div>
+              </div>
+              <div class="att-marker__tip__container">
+                <div class="att-marker__tip">
+              </div>
+            `
+          })
+        }
+      })
+
+      state.waits = waits
+    },
+    SET_SCHEDULES: (state, data) => {
       let activities = []
       for (let item of data) {
         activities = activities.concat(item.body.activities)
@@ -120,6 +126,28 @@ const user = {
           data[aid] = item.schedule.schedules
         }
       })
+      state.schedules = data
+    }
+  },
+  actions: {
+    // 获取项目列表
+    async getDestinationsList({ commit, state }, type) {
+      // let key = `destinationsList-${type}`
+      let data = await parkApi.explorerDestinations(state.local, type)
+      // this.updateCache(key, data)
+      commit('SET_LIST', data)
+    },
+
+    // 获取等待时间
+    async getAttractionsWait({ commit, state }) {
+      let data = await parkApi.waitTimsAttractions(state.local, state.date)
+
+      commit('SET_WAITS', data)
+    },
+
+    // 获取时间表
+    async getSchedules({ commit, state }) {
+      let data = await parkApi.explorerSchedules(state.local, state.date)
 
       // this.updateCache(key, data)
       // wepy.setStorageSync('destinationsSchedules', data)
