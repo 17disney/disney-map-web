@@ -1,14 +1,23 @@
-<style lang="less">
-
+<style lang="stylus">
+  .map-navbar
+    z-index 11
+    position fixed
+    background #FFF
 </style>
 
 <template>
   <div class="page">
-    <mt-navbar fixed v-show="!hideTools" class="map-navbar ds-tab" v-model="attTypeTab.selectedId">
+    <!-- <mt-navbar fixed v-show="!hideTools" class="map-navbar ds-tab" v-model="attTypeTab.selectedId">
       <div class="inner">
         <mt-tab-item v-for="item in attTypeTab.list" :key="item.name" :id="item.id">{{item.name}}</mt-tab-item>
       </div>
-    </mt-navbar>
+    </mt-navbar> -->
+    <div class="map-navbar">
+      <cube-button primary="primary" >show toast</cube-button>
+      23
+
+    </div>
+
     <div class="map-btn-float">
       <a @click="getWaits" class="btn">
         <icon name="refresh"></icon>
@@ -46,6 +55,7 @@
 
 <script>
 import icon from '@/components/icon'
+// import tab from '@/components/tab/tab'
 import attList from '@/components/att-list'
 import attWaittime from '@/components/att-waittime'
 import { attTypeTab, attTypeIcon } from '@/common/park-arr'
@@ -106,11 +116,9 @@ export default {
       wx.miniProgram.navigateTo({ url })
     },
     getWaits() {
-      Toast({
-        message: '更新成功',
-        position: 'top',
-        duration: 2500
-      });
+      this.$createToast({
+        txt: 'this.toastTxt'
+      }).show()
       this.$store.dispatch('getAttractionsWait')
     }
   },
