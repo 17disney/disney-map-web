@@ -89,6 +89,9 @@ export default {
   watch: {
     'attTypeTab.selectedId': function (nVal, oVal) {
       this.$store.dispatch('getDestinationsList', nVal)
+    },
+    list: function (nVal, oVal) {
+      this.$store.dispatch('getAttractionsWait')
     }
   },
   methods: {
@@ -103,7 +106,6 @@ export default {
       wx.miniProgram.navigateTo({ url })
     },
     getWaits() {
-      this.initMarker()
       Toast({
         message: '更新成功',
         position: 'top',
@@ -135,7 +137,7 @@ export default {
   },
   created() {
     this.$store.dispatch('getDestinationsList', 'attraction')
-    this.$store.dispatch('getAttractionsWait')
+
     this.$store.dispatch('getSchedules')
   }
 }

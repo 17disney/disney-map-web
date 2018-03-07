@@ -3,18 +3,25 @@ import Vuex from 'vuex'
 import App from './App'
 import router from './router'
 import Vue2Leaflet from 'vue2-leaflet'
-import Mint from 'mint-ui'
+// import Mint from '../../../dev-ui/mint-ui/src'
+// import Cube from '../../../dev-ui/disney-ui/'
+import Cube from 'cube-ui'
 import store from './store'
 
 import 'mint-ui/lib/style.css'
 import 'leaflet/dist/leaflet.css'
-import '@/style/iconfont.css'
-import '@/style/pepmdx-icons.css'
+// import '@/style/iconfont.css'
+// import '@/style/pepmdx-icons.css'
 import '@/style/disney/index.less'
+
 
 // Vue.config.productionTip = false
 Vue.use(Mint)
 Vue.use(Vuex)
+
+// Vue.use(XButton)
+// Vue.component('x-button', Vux.XButton)
+
 Vue.component('v-map', Vue2Leaflet.Map)
 Vue.component('v-tilelayer', Vue2Leaflet.TileLayer)
 Vue.component('v-marker', Vue2Leaflet.Marker)

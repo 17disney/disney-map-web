@@ -94,7 +94,7 @@ const user = {
       let { list } = state
       list.forEach(item => {
         let wait = waits[item.aid]
-        if (wait && wait['waitList']) {
+        if (wait && wait['waitList'] && wait.status == 'Operating') {
           item.icon = L.divIcon({
             className: 'att-marker att-marker--wait',
             popupAnchor: [17, 57],
