@@ -6,7 +6,6 @@ import Vue2Leaflet from 'vue2-leaflet'
 import store from './store'
 
 import 'leaflet/dist/leaflet.css'
-import '@/style/disney/index.less'
 import '@/styles/disney/index.styl'
 // Vue.config.productionTip = false
 Vue.use(Vuex)

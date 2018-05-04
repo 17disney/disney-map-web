@@ -44,11 +44,6 @@ const user = {
           item.coordinates = _coordinates
         }
 
-        // 提取主图
-        item.finderListMobileSquare = item.medias.filter(_ => {
-          return _.type === 'finderListMobileSquare'
-        })[0]
-
         const iconData = ATT_TYPE.find(_ => _.id === item.type)
 
         if (iconData && iconData['icon']) {

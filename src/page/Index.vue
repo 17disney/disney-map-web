@@ -33,8 +33,7 @@
           <v-popup :options="popupOption">
             <div class="inner" @click="handleClickAtt(item.id)">
               <div class="att-popup__avatar">
-                <!-- <att-media :medias=""></att-media> -->
-                <!-- <img :src="item.finderListMobileSquare.url"> -->
+                <att-media :medias="item.medias"></att-media>
               </div>
               <div class="att-popup__body">
                 <h3 class="att-popup__title">{{item.name}}</h3>
@@ -47,7 +46,7 @@
       </v-map>
     </div>
     <div v-show="showMode == 'list'" class="attlist-warp">
-      <!-- <att-list :waits="waits" :list="list" :schedules="schedules"></att-list> -->
+      <att-list :waits="waits" :list="activeList" :schedules="schedules"></att-list>
     </div>
   </div>
 </template>
@@ -120,9 +119,8 @@ export default {
     ]),
     // 跳转小程序
     handleClickAtt(id) {
-      let [__id__, entityType, destination] = handleId(id)
-      let url = `att?id=${__id__}&entityType=${entityType}&destination=${destination}`
-      console.log(url)
+      const [__id__, entityType, destination] = handleId(id)
+      const url = `att?id=${__id__}&entityType=${entityType}&destination=${destination}`
       wx.miniProgram.navigateTo({ url })
     },
     getWaits() {
@@ -137,16 +135,9 @@ export default {
 
   },
   mounted() {
-    // let map = L.map('mapid', {
-    //   center: [31.1492, 121.6667],
-    //   zoom: 17,
-    //   maxZoom: 18,
-    //   minZoom: 13,
-    //   crs: crsBaidu
-    // })
-    let map = this.$refs.map.mapObject
-    let url = 'https://secure.parksandresorts.wdpromedia.com/media/maps/prod/shdr-baidu/13/{z}/{x}/{y}.jpg'
-    let options = {
+    const map = this.$refs.map.mapObject
+    const url = 'https://secure.parksandresorts.wdpromedia.com/media/maps/prod/shdr-baidu/13/{z}/{x}/{y}.jpg'
+    const options = {
       getUrlArgs: (tilePoint) => {
         return {
           z: tilePoint.z,
