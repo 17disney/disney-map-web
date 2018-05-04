@@ -128,7 +128,6 @@ const LAND_NAME = {
   landMickeyAvenue: '米奇大街'
 }
 
-
 module.exports = {
   ATT_TYPE,
   ATT_HOT_LIST,

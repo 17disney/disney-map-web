@@ -29,11 +29,12 @@
     </div>
     <div class="map-warp">
       <v-map :crs="crsBaidu" ref="map" :zoom="18" :min-zoom="10" :max-zoom="18" :center="center">
-        <v-marker v-for="item in list" :icon="item.icon" :key="item.id" :lat-lng="item.coordinates">
+        <v-marker v-for="(item, index) in activeList" :icon="item.icon" :key="index" :lat-lng="item.coordinates">
           <v-popup :options="popupOption">
             <div class="inner" @click="handleClickAtt(item.id)">
               <div class="att-popup__avatar">
-                <img :src="item.finderListMobileSquare.url">
+                <!-- <att-media :medias=""></att-media> -->
+                <!-- <img :src="item.finderListMobileSquare.url"> -->
               </div>
               <div class="att-popup__body">
                 <h3 class="att-popup__title">{{item.name}}</h3>
@@ -46,7 +47,7 @@
       </v-map>
     </div>
     <div v-show="showMode == 'list'" class="attlist-warp">
-      <att-list :waits="waits" :list="list" :schedules="schedules"></att-list>
+      <!-- <att-list :waits="waits" :list="list" :schedules="schedules"></att-list> -->
     </div>
   </div>
 </template>
@@ -59,6 +60,7 @@ import crsBaidu from '@/lib/crs.baidu'
 import webdogTileLayer from '@/lib/webdogTileLayer'
 
 import AttWaittime from '@/components/Att/AttWaittime'
+import AttMedia from '@/components/Att/AttMedia'
 import AttList from '@/components/AttList/AttList'
 import AttListItem from '@/components/AttList/AttListItem'
 import DsNavbar from '@/components/DsNavbar/DsNavbar'
@@ -72,7 +74,7 @@ import { ATT_TYPE } from '@/common/const'
 export default {
   name: 'Index',
   components: {
-    AttWaittime, AttList, AttListItem, DsNavbar, DsTabScroll, DsTabItem, DsIcon
+    AttWaittime,AttMedia, AttList, AttListItem, DsNavbar, DsTabScroll, DsTabItem, DsIcon
   },
   computed: {
     ...mapState({
@@ -85,6 +87,9 @@ export default {
     },
     selectedIcon() {
       return ATT_TYPE.find(_ => _.id === this.type)['icon']
+    },
+    activeList() {
+      return this.list.filter(_ => _.type === this.type)
     }
   },
   data() {
@@ -107,12 +112,7 @@ export default {
     }
   },
   watch: {
-    'attTypeTab.selectedId': function (nVal, oVal) {
-      this.$store.dispatch('getDestinationsList', nVal)
-    },
-    list: function (nVal, oVal) {
-      this.$store.dispatch('getAttractionsWait')
-    }
+
   },
   methods: {
     ...mapActions([
@@ -159,7 +159,7 @@ export default {
   },
   created() {
     this.$store.dispatch('getDestinationsList', 'attraction')
-    // this.$store.dispatch('getSchedules')
+    this.$store.dispatch('getSchedules')
   }
 }
 </script>

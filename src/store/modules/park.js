@@ -1,9 +1,8 @@
-import parkApi from '@/api/park'
 import moment from 'moment'
 import { lineToObject } from '@/utils/tool'
 import { landName } from '@/utils/filter'
-import coordtransform from '@/utils/coordtransform'
 import { ATT_TYPE } from '@/common/const'
+import Waittimes from '@/common/api/waittimes'
 
 const user = {
   state: {
@@ -15,6 +14,7 @@ const user = {
   },
   mutations: {
     SET_LIST: (state, data) => {
+      const nData = []
       data.forEach(item => {
         let { id, ancestors } = item
         item.aid = lineToObject(id)['__id__']
@@ -27,7 +27,7 @@ const user = {
 
         item.type = item.type.toLowerCase()
         // 提取坐标
-        item.coordinates = [0, 0]
+        let _coordinates = null
         if (
           item.relatedLocations &&
           item.relatedLocations[0] &&
@@ -40,7 +40,8 @@ const user = {
           coordinates[0] = coordinates[0] + 0.0003
           coordinates[1] = coordinates[1] - 0.0001
           // coordinates = coordtransform.bd09togcj02(...coordinates)
-          item.coordinates = coordinates
+          _coordinates = coordinates
+          item.coordinates = _coordinates
         }
 
         // 提取主图
@@ -48,16 +49,21 @@ const user = {
           return _.type === 'finderListMobileSquare'
         })[0]
 
-        const icon = ATT_TYPE.find(_ => _.id === item.type)['icon']
+        const iconData = ATT_TYPE.find(_ => _.id === item.type)
 
-        item.icon = L.divIcon({
-          className:
-            'att-marker att-marker--icon icon--pep icon__' +
-            icon,
-          popupAnchor: [12, 42]
-        })
+        if (iconData && iconData['icon']) {
+          item.icon = L.divIcon({
+            className:
+              'att-marker att-marker--icon icon--pep icon__' + iconData['icon'],
+            popupAnchor: [12, 42]
+          })
+        }
+
+        if (_coordinates) {
+          nData.push(item)
+        }
       })
-      state.list = data
+      state.list = nData
     },
     SET_WAITS: (state, data) => {
       let waits = {}
@@ -118,12 +124,12 @@ const user = {
     },
     SET_SCHEDULES: (state, data) => {
       let activities = []
-      for (let item of data) {
-        activities = activities.concat(item.body.activities)
+      for (const item of data) {
+        activities = activities.concat(item.body[0].activities)
       }
       data = {}
       activities.forEach(item => {
-        let aid = lineToObject(item.id)['__id__']
+        const aid = lineToObject(item.id)['__id__']
         if (item.schedule && item.schedule.schedules) {
           data[aid] = item.schedule.schedules
         }
@@ -134,27 +140,20 @@ const user = {
   actions: {
     // 获取项目列表
     async getDestinationsList({ commit, state }, type) {
-      // let key = `destinationsList-${type}`
-      let data = await parkApi.explorerDestinations(state.local, type)
-      // this.updateCache(key, data)
+      const data = await Waittimes.destinations(state.local)
       commit('SET_LIST', data)
     },
 
     // 获取等待时间
     async getAttractionsWait({ commit, state }) {
-      let data = await parkApi.waitTimsAttractions(state.local, state.date)
-
-      commit('SET_WAITS', data)
+      // cosnt data = await Waittimes.attractions()
+      // let data = await parkApi.waitTimsAttractions(state.local, state.date)
+      // commit('SET_WAITS', data)
     },
 
     // 获取时间表
     async getSchedules({ commit, state }) {
-      let data = await parkApi.explorerSchedules(state.local, state.date)
-
-      // this.updateCache(key, data)
-      // wepy.setStorageSync('destinationsSchedules', data)
-      // wepy.setStorageSync('destinationsSchedulesCache', date)
-      // return data
+      const data = await Waittimes.schedulesPre(state.local)
       commit('SET_SCHEDULES', data)
     }
   }

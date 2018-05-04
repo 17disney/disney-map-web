@@ -11,7 +11,6 @@ import '@/styles/disney/index.styl'
 // Vue.config.productionTip = false
 Vue.use(Vuex)
 
-
 Vue.component('v-map', Vue2Leaflet.Map)
 Vue.component('v-tilelayer', Vue2Leaflet.TileLayer)
 Vue.component('v-marker', Vue2Leaflet.Marker)
