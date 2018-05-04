@@ -8,37 +8,30 @@
 
 <template>
   <div class="page">
-    <!-- <mt-navbar fixed v-show="!hideTools" class="map-navbar ds-tab" v-model="attTypeTab.selectedId">
-      <div class="inner">
-        <mt-tab-item v-for="item in attTypeTab.list" :key="item.name" :id="item.id">{{item.name}}</mt-tab-item>
-      </div>
-    </mt-navbar> -->
-
-    <ds-navbar :wheel="true">
-      <ds-tab-scroll :list="attTypeTab.list" :wheel="true" @change="change" ref="scroll" v-model="attTypeTab.selectedId">
-        <ds-tab-item :key="item.id" :id="item.id" v-for="item in attTypeTab.list">{{item.name}}</ds-tab-item>
+    <ds-navbar :fixed="true" :wheel="true">
+      <ds-tab-scroll :list="attTypeTab" :wheel="true" @change="change" ref="scroll" v-model="type">
+        <ds-tab-item v-if="item.showTab" :key="item.id" :id="item.id" v-for="item in attTypeTab">{{item.name}}</ds-tab-item>
       </ds-tab-scroll>
       <div slot="focus-icon">
         <ds-icon :name="selectedIcon"></ds-icon>
       </div>
     </ds-navbar>
-
     <div class="map-btn-float">
       <a @click="getWaits" class="btn">
-        <icon name="refresh"></icon>
+        <ds-icon name="refresh"></ds-icon>
       </a>
       <a @click="showMode = 'list'" class="btn" v-if="showMode=='map'">
-        <icon name="lists"></icon>
+        <ds-icon name="lists"></ds-icon>
       </a>
       <a @click="showMode = 'map'" class="btn" v-if="showMode=='list'">
-        <icon name="maps"></icon>
+        <ds-icon name="maps"></ds-icon>
       </a>
     </div>
     <div class="map-warp">
-      <v-map :crs="crsBaidu" ref="map" :zoom="18" :min-zoom=5 :max-zoom=18 :center="center">
+      <v-map :crs="crsBaidu" ref="map" :zoom="18" :min-zoom="10" :max-zoom="18" :center="center">
         <v-marker v-for="item in list" :icon="item.icon" :key="item.id" :lat-lng="item.coordinates">
           <v-popup :options="popupOption">
-            <div class="inner" @click="clickAtt(item.id)">
+            <div class="inner" @click="handleClickAtt(item.id)">
               <div class="att-popup__avatar">
                 <img :src="item.finderListMobileSquare.url">
               </div>
@@ -59,35 +52,45 @@
 </template>
 
 <script>
-import icon from '@/components/icon'
-// import tab from '@/components/tab/tab'
-import attList from '@/components/att-list'
-import attWaittime from '@/components/att-waittime'
-import { attTypeTab, attTypeIcon } from '@/common/park-arr'
 import { mapActions, mapState } from 'vuex'
 import { handleId } from '@/utils/tool'
 import { Toast } from 'mint-ui';
 import crsBaidu from '@/lib/crs.baidu'
 import webdogTileLayer from '@/lib/webdogTileLayer'
 
+import AttWaittime from '@/components/Att/AttWaittime'
+import AttList from '@/components/AttList/AttList'
+import AttListItem from '@/components/AttList/AttListItem'
 import DsNavbar from '@/components/DsNavbar/DsNavbar'
+import DsTabScroll from '@/components/DsTab/DsTabScroll'
 import AttTab from '@/components/AttTab/AttTab'
+import DsTabItem from '@/components/DsTab/DsTabItem'
+import DsIcon from '@/components/DsIcon/DsIcon'
+
+import { ATT_TYPE } from '@/common/const'
+
 export default {
   name: 'Index',
   components: {
-    icon, attList, attWaittime, DsNavbar
+    AttWaittime, AttList, AttListItem, DsNavbar, DsTabScroll, DsTabItem, DsIcon
   },
   computed: {
     ...mapState({
       list: state => state.park.list,
       waits: state => state.park.waits,
       schedules: state => state.park.schedules,
-    })
+    }),
+    attTypeTab() {
+      return ATT_TYPE.filter(_ => _.showTab)
+    },
+    selectedIcon() {
+      return ATT_TYPE.find(_ => _.id === this.type)['icon']
+    }
   },
   data() {
     return {
-      attTypeTab,
       crsBaidu,
+      type: 'attraction',
       hideTools: false,
       showMode: 'map',
       center: [31.1492, 121.6667],
@@ -115,8 +118,8 @@ export default {
     ...mapActions([
       'getDestinationsList'
     ]),
-
-    clickAtt(id) {
+    // 跳转小程序
+    handleClickAtt(id) {
       let [__id__, entityType, destination] = handleId(id)
       let url = `att?id=${__id__}&entityType=${entityType}&destination=${destination}`
       console.log(url)
@@ -124,10 +127,14 @@ export default {
     },
     getWaits() {
       // this.$createToast({
-      //   txt: 'this.toastTxt'
+      //   txt: '已更新'
       // }).show()
       this.$store.dispatch('getAttractionsWait')
+    },
+    change(val) {
+      this.type = this.attTypeTab[val]['id']
     }
+
   },
   mounted() {
     // let map = L.map('mapid', {
@@ -152,8 +159,7 @@ export default {
   },
   created() {
     this.$store.dispatch('getDestinationsList', 'attraction')
-
-    this.$store.dispatch('getSchedules')
+    // this.$store.dispatch('getSchedules')
   }
 }
 </script>

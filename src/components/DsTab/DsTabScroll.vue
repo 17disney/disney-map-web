@@ -1,5 +1,6 @@
-<style lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus">
 @require '../../styles/disney/var/color.styl';
+
 
 .ds-tab-scroll {
   position: relative;
@@ -34,6 +35,8 @@
     background: #FFF;
     // box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
   }
+
+
 }
 </style>
 
@@ -47,15 +50,19 @@
     <slot name="focus"></slot>
   </div>
 </template>
-<script>
-import BScroll from '@/lib/better-scroll'
+<script type="text/ecmascript-6">
+// import BScroll from 'better-scroll'
+import BScroll from '../../lib/better-scroll'
 
+const COMPONENT_NAME = 'ds-tab-scroll'
 const EVENT_CHANGE = 'change'
 
 export default {
-  name: 'att-tab',
+  name: COMPONENT_NAME,
   props: {
-
+    value: {
+      // propsync: true
+    },
     list: {
       type: Array
     },

@@ -79,6 +79,9 @@
     font-size: 25px;
     line-height: 40px;
     color: $color-primary-dark;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>

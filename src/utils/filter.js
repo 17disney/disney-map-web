@@ -1,10 +1,10 @@
 import moment from 'moment'
 import { lineToObject } from './tool'
-import { landArr } from './land-arr'
+import { LAND_NAME } from '@/common/const'
 
 export function landName (id) {
   let aid = lineToObject(id)['__id__']
-  return landArr[aid]
+  return LAND_NAME[aid]
 }
 
 // 时间去0

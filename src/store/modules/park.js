@@ -3,7 +3,7 @@ import moment from 'moment'
 import { lineToObject } from '@/utils/tool'
 import { landName } from '@/utils/filter'
 import coordtransform from '@/utils/coordtransform'
-import { attTypeTab, attTypeIcon } from '@/common/park-arr'
+import { ATT_TYPE } from '@/common/const'
 
 const user = {
   state: {
@@ -48,10 +48,12 @@ const user = {
           return _.type === 'finderListMobileSquare'
         })[0]
 
+        const icon = ATT_TYPE.find(_ => _.id === item.type)['icon']
+
         item.icon = L.divIcon({
           className:
             'att-marker att-marker--icon icon--pep icon__' +
-            attTypeIcon[item.type],
+            icon,
           popupAnchor: [12, 42]
         })
       })
