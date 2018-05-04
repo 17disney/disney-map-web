@@ -1,8 +1,9 @@
 <style lang="stylus">
-  .map-navbar
-    z-index 11
-    position fixed
-    background #FFF
+.map-navbar {
+  z-index: 11;
+  position: fixed;
+  background: #FFF;
+}
 </style>
 
 <template>
@@ -12,11 +13,15 @@
         <mt-tab-item v-for="item in attTypeTab.list" :key="item.name" :id="item.id">{{item.name}}</mt-tab-item>
       </div>
     </mt-navbar> -->
-    <div class="map-navbar">
-      <cube-button primary="primary" >show toast</cube-button>
-      23
 
-    </div>
+    <ds-navbar :wheel="true">
+      <ds-tab-scroll :list="attTypeTab.list" :wheel="true" @change="change" ref="scroll" v-model="attTypeTab.selectedId">
+        <ds-tab-item :key="item.id" :id="item.id" v-for="item in attTypeTab.list">{{item.name}}</ds-tab-item>
+      </ds-tab-scroll>
+      <div slot="focus-icon">
+        <ds-icon :name="selectedIcon"></ds-icon>
+      </div>
+    </ds-navbar>
 
     <div class="map-btn-float">
       <a @click="getWaits" class="btn">
@@ -65,10 +70,12 @@ import { Toast } from 'mint-ui';
 import crsBaidu from '@/lib/crs.baidu'
 import webdogTileLayer from '@/lib/webdogTileLayer'
 
+import DsNavbar from '@/components/DsNavbar/DsNavbar'
+import AttTab from '@/components/AttTab/AttTab'
 export default {
   name: 'Index',
   components: {
-    icon, attList, attWaittime
+    icon, attList, attWaittime, DsNavbar
   },
   computed: {
     ...mapState({
@@ -116,9 +123,9 @@ export default {
       wx.miniProgram.navigateTo({ url })
     },
     getWaits() {
-      this.$createToast({
-        txt: 'this.toastTxt'
-      }).show()
+      // this.$createToast({
+      //   txt: 'this.toastTxt'
+      // }).show()
       this.$store.dispatch('getAttractionsWait')
     }
   },

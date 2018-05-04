@@ -59,7 +59,6 @@ export default {
     clickAtt(id) {
       let [__id__, entityType, destination] = handleId(id)
       let url = `att?id=${__id__}&entityType=${entityType}&destination=${destination}`
-      console.log(url)
       wx.miniProgram.navigateTo({url})
     }
   }
