@@ -4,6 +4,17 @@
   position: fixed;
   background: #FFF;
 }
+
+.att-list {
+  position: absolute;
+  z-index: 1;
+  left: 0px;
+  top: 60px;
+  right: 0px;
+  bottom: 0px;
+  overflow-y: auto;
+  background: #fff;
+}
 </style>
 
 <template>
@@ -45,7 +56,7 @@
         </v-marker>
       </v-map>
     </div>
-    <div v-show="showMode == 'list'" class="attlist-warp">
+    <div v-show="showMode == 'list'">
       <att-list :waits="waits" :list="activeList" :schedules="schedules"></att-list>
     </div>
   </div>
@@ -61,7 +72,6 @@ import webdogTileLayer from '@/lib/webdogTileLayer'
 import AttWaittime from '@/components/Att/AttWaittime'
 import AttMedia from '@/components/Att/AttMedia'
 import AttList from '@/components/AttList/AttList'
-import AttListItem from '@/components/AttList/AttListItem'
 import DsNavbar from '@/components/DsNavbar/DsNavbar'
 import DsTabScroll from '@/components/DsTab/DsTabScroll'
 import AttTab from '@/components/AttTab/AttTab'
@@ -73,7 +83,7 @@ import { ATT_TYPE } from '@/common/const'
 export default {
   name: 'Index',
   components: {
-    AttWaittime,AttMedia, AttList, AttListItem, DsNavbar, DsTabScroll, DsTabItem, DsIcon
+    AttWaittime, AttMedia, AttList, DsNavbar, DsTabScroll, DsTabItem, DsIcon
   },
   computed: {
     ...mapState({
@@ -96,14 +106,13 @@ export default {
       crsBaidu,
       type: 'attraction',
       hideTools: false,
-      showMode: 'map',
+      showMode: 'list',
       center: [31.1492, 121.6667],
       popupOption: {
         autoClose: false,
         closeButton: false,
         minWidth: 300,
         className: 'att-popup'
-        // closeOnClick: false
       },
       tilelayerOptions: {
         tms: true

@@ -1,44 +1,116 @@
+<style lang='stylus'>
+@require '../../styles/disney/var/color.styl';
+@require '../../styles/disney/mixin/index.styl';
+
+.att-list-item {
+  position: relative;
+  padding: 16px;
+  display: flex;
+  align-items: start;
+
+  .att-media {
+    width: 58px;
+    height: 58px;
+  }
+
+  &:active {
+    background: #d9d9d9;
+  }
+
+  &:not(:first-child) {
+    &:before {
+      setTopLine($color-light-grey-ss);
+      left: 16px;
+      right: 16px;
+    }
+  }
+
+  &__hd {
+    margin-right: 16px;
+    width: 64px;
+    height: 64px;
+    text-align: center;
+  }
+
+  &__bd {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.att-list-item__title {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 600;
+  color: $color-grey;
+  word-wrap: break-word;
+  word-break: break-all;
+  margin-bottom: 2px;
+}
+
+.att-list-item__desc {
+  color: $color-grey;
+  font-size: 14px;
+  line-height: 1.25;
+
+  // .ellipsisLn(2);
+  &--time {
+    display: inline-block;
+    margin-right: 5px;
+  }
+}
+
+.att-list-item__wait {
+  margin-top: 3px;
+  font-size: 14px;
+  line-height: 1.25;
+  color: $color-primary;
+
+  .strong {
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0 6px;
+  }
+}
+</style>
 <template>
-  <div v-if="wait && wait['waitList']">
-    <div class="attlist-box__wait" v-if="wait.status == 'Operating'">等候<strong class="strong">{{wait.waitList[0][1] || 0}}</strong>分钟</div>
-    <div class="attlist-box__wait color--warn" v-else>
-      已关闭
+  <div @click="handleClick(data.id)" class="att-list-item">
+    <div class="att-list-item__hd">
+      <att-media :medias="data.medias"></att-media>
     </div>
-    <div v-if="wait.fpList">
-      <div class="attlist-box__fp" v-if="wait.fpStatus">
-        FP 使用时间： {{wait.fpStartTime}} 至 {{wait.fpEndTime}}
-      </div>
-      <div class="attlist-box__fp color--warn" v-else>
-        FP 已领完
-      </div>
+    <div class="att-list-item__bd">
+      <div class="att-list-item__title">{{data.name}}</div>
+      <div class="att-list-item__desc">{{data.landName}}</div>
+      <!-- <att-waittime :item="item" :wait="waits[data.aid]"></att-waittime> -->
     </div>
   </div>
 </template>
 
 <script>
+import AttWaittime from '@/components/Att/AttWaittime'
+import AttMedia from '@/components/Att/AttMedia'
+
 export default {
+  components: { AttMedia, AttWaittime },
+
   props: {
-    wait: {
-      type: Object
-    },
-    item: {
-      type: Object
-    }
+    data: Object
   },
+
   data() {
     return {
     }
   },
 
-  components: {},
-
   computed: {},
 
-  mounted() { }
+  mounted() { },
 
+  methods: {
+    handleClick(id) {
+      this.$emit('click', id)
+    }
+  }
 }
-
 </script>
-<style lang='less'>
-
-</style>

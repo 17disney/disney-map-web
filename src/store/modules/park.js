@@ -141,9 +141,8 @@ const user = {
 
     // 获取等待时间
     async getAttractionsWait({ commit, state }) {
-      // cosnt data = await Waittimes.attractions()
-      // let data = await parkApi.waitTimsAttractions(state.local, state.date)
-      // commit('SET_WAITS', data)
+      const data = await Waittimes.home(state.local, state.date)
+      commit('SET_WAITS', data)
     },
 
     // 获取时间表

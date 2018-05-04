@@ -1,4 +1,4 @@
-<style lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus">
 @require '../../styles/disney/var/color.styl';
 
 .ds-tab-scroll {

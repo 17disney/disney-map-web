@@ -1,0 +1,43 @@
+setTopLine($color = #C7C7C7) {
+  content: ' ';
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 1px;
+  transform: scale(1, 0.5);
+  background-color: $color;
+}
+
+setBottomLine(color = #C7C7C7) {
+  content: ' ';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 1px;
+  transform: scale(1, 0.5);
+  background-color: $color;
+}
+
+setLeftLine(color = #C7C7C7) {
+  content: ' ';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  bottom: 0;
+  transform: scale(0.5, 1);
+  background-color: $color;
+}
+
+setRightLine(color = #C7C7C7) {
+  content: ' ';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 1px;
+  bottom: 0;
+  transform: scale(0.5, 1);
+  background-color: $color;
+}

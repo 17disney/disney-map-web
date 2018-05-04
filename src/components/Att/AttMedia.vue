@@ -6,6 +6,7 @@
   &--finderListMobileSquare {
     width: 48px;
     height: 48px;
+    border-radius: 100%;
 
     &.size-small {
       width: 36px;
@@ -50,7 +51,7 @@ export default {
   },
 
   computed: {
-    url: function() {
+    url: function () {
       return this.medias.find(_ => _.type === this.type)['url']
     }
   },

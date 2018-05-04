@@ -1,18 +1,10 @@
+<style lang="stylus">
+</style>
+
 <template>
-  <div>
-    <div v-for="item in list" @click="clickAtt(item.id)" class="attlist-box">
-      <div class="attlist-box__hd">
-        <!-- <img class="attlist-box__thumb radius" :src="item.finderListMobileSquare.url"> -->
-      </div>
-      <div class="attlist-box__bd">
-        <div class="attlist-box__title">{{item.name}}</div>
-        <div class="attlist-box__desc">{{item.landName}}</div>
-
-        <att-waittime :item="item" :wait="waits[item.aid]"></att-waittime>
-      </div>
-    </div>
+  <div class="att-list">
+    <att-list-item v-for="(item, index) in list" :key="index" :data="item" @click="clickAtt(item.id)"></att-list-item>
   </div>
-
 </template>
 
 <script>
@@ -20,10 +12,11 @@ import moment from 'moment'
 import { handleId } from '@/utils/tool'
 import AttWaittime from '@/components/Att/AttWaittime'
 import AttMedia from '@/components/Att/AttMedia'
+import AttListItem from '@/components/AttList/AttListItem'
 
 export default {
   components: {
-    AttWaittime, AttMedia
+    AttWaittime, AttMedia, AttListItem
   },
 
   props: {
@@ -55,6 +48,3 @@ export default {
 }
 
 </script>
-<style lang='less'>
-
-</style>

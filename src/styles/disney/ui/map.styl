@@ -1,6 +1,7 @@
 .map-navbar {
   z-index: 1000 !important;
 }
+
 .map-warp {
   position: absolute;
   top: 0px;
@@ -8,45 +9,57 @@
   right: 0px;
   bottom: 0px;
   z-index: 0;
+
   .leaflet-control {
     display: none;
   }
+
   .att-popup {
     border-radius: 10px;
     cursor: pointer;
+
     :active {
       background: #eee;
     }
+
     .leaflet-popup-content-wrapper {
       border-radius: 8px;
     }
+
     .leaflet-popup-tip {
       width: 13px;
       height: 13px;
     }
+
     .leaflet-popup-content {
       margin: 16px;
     }
+
     .inner {
       display: flex;
     }
+
     &__avatar {
       margin-right: 16px;
+
       img {
         border-radius: 100%;
       }
     }
+
     &__title {
       line-height: 1;
       font-size: 18px;
       font-weight: 600;
       color: @dsColorDark;
     }
+
     &__desc {
       font-size: 14px;
       margin: 0px;
       margin-top: 5px;
     }
+
     &__body {
       display: flex;
       flex-flow: column;
@@ -54,9 +67,11 @@
     }
   }
 }
+
 .att-marker {
   color: @color-primary-dark;
   text-align: center;
+
   &--icon {
     &:after {
       content: '';
@@ -71,19 +86,23 @@
       background: #fff;
       transform: rotate(45deg);
     }
+
     width: 35px !important;
     height: 35px !important;
     font-size: 20px;
+
     &:before {
       position: relative;
       z-index: 1;
       line-height: 35px;
     }
   }
+
   &--wait {
     width: 45px !important;
     height: auto !important;
   }
+
   &__content {
     background: #fff;
     box-shadow: 0px 3px 14px rgba(0, 0, 0, 0.4);
@@ -103,6 +122,7 @@
       overflow: hidden;
       pointer-events: none;
     }
+
     background: white;
     width: 13px;
     height: 13px;
@@ -110,10 +130,12 @@
     box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
     transform: rotate(45deg);
   }
+
   &__desc {
     font-size: 10px;
     line-height: 1;
   }
+
   &__num {
     font-weight: 600;
     font-size: 16px;
@@ -127,9 +149,10 @@
   right: 16px;
   bottom: 8px;
   z-index: 100;
-  background-color: fade(@dsLinkColorDefault, 90%);
+  background-color: rgba($color-grey, 0.9);
   border-radius: 24px;
   z-index: 1000;
+
   .btn {
     width: 48px;
     height: 48px;
@@ -137,9 +160,11 @@
     color: #fff;
     text-align: center;
     transition: 0.5s;
+
     &:active {
       color: rgba(255, 255, 255, 0.7);
     }
+
     .icon--pep {
       line-height: 48px;
     }
