@@ -1,27 +1,26 @@
+<style lang="stylus">
+@require '../../styles/disney/var/color.styl';
+
+.att-waittime {
+  color: $color-grey;
+}
+</style>
+
+
 <template>
   <div v-if="wait && wait['waitList']">
-    <div class="attlist-box__wait" v-if="wait.status == 'Operating'">等候<strong class="strong">{{wait.waitList[0][1] || 0}}</strong>分钟</div>
-    <div class="attlist-box__wait color--warn" v-else>
-      已关闭
-    </div>
-    <div v-if="wait.fpList">
-      <div class="attlist-box__fp" v-if="wait.fpStatus">
-        FP 使用时间： {{wait.fpStartTime}} 至 {{wait.fpEndTime}}
-      </div>
-      <div class="attlist-box__fp color--warn" v-else>
-        FP 已领完
-      </div>
-    </div>
+    <div class="att-waittime" v-if="wait.status === 'Operating'">等候
+      <strong class="strong">{{wait.waitList[0][1] || 0}} </strong>分钟</div>
+    <att-status :status="wait.status" v-else></att-status>
   </div>
 </template>
 
 <script>
+import AttStatus from './AttStatus'
+
 export default {
   props: {
     wait: {
-      type: Object
-    },
-    item: {
       type: Object
     }
   },
@@ -30,15 +29,11 @@ export default {
     }
   },
 
-  components: {},
+  components: { AttStatus },
 
   computed: {},
 
   mounted() { }
-
 }
 
 </script>
-<style lang='less'>
-
-</style>

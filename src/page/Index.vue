@@ -5,15 +5,20 @@
   background: #FFF;
 }
 
-.att-list {
+.att-list-wrapper {
   position: absolute;
   z-index: 1;
   left: 0px;
   top: 60px;
   right: 0px;
   bottom: 0px;
-  overflow-y: auto;
+  // overflow-y: auto;
   background: #fff;
+
+  .att-list {
+    padding-top: 25px;
+    padding-bottom: 50px;
+  }
 }
 </style>
 
@@ -57,24 +62,26 @@
       </v-map>
     </div>
     <div v-show="showMode == 'list'">
-      <att-list :waits="waits" :list="activeList" :schedules="schedules"></att-list>
+      <div class="att-list-wrapper">
+        <att-list class="content" :list="activeList" :waits="waits" :schedules="schedules"></att-list>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { Toast } from 'mint-ui';
 import { mapActions, mapState } from 'vuex'
 import { handleId } from '@/utils/tool'
-import { Toast } from 'mint-ui';
 import crsBaidu from '@/lib/crs.baidu'
 import webdogTileLayer from '@/lib/webdogTileLayer'
+import BScroll from '@/lib/better-scroll';
 
 import AttWaittime from '@/components/Att/AttWaittime'
 import AttMedia from '@/components/Att/AttMedia'
 import AttList from '@/components/AttList/AttList'
 import DsNavbar from '@/components/DsNavbar/DsNavbar'
 import DsTabScroll from '@/components/DsTab/DsTabScroll'
-import AttTab from '@/components/AttTab/AttTab'
 import DsTabItem from '@/components/DsTab/DsTabItem'
 import DsIcon from '@/components/DsIcon/DsIcon'
 
@@ -106,7 +113,7 @@ export default {
       crsBaidu,
       type: 'attraction',
       hideTools: false,
-      showMode: 'list',
+      showMode: 'map',
       center: [31.1492, 121.6667],
       popupOption: {
         autoClose: false,
@@ -119,29 +126,22 @@ export default {
       }
     }
   },
-  watch: {
 
-  },
   methods: {
     ...mapActions([
       'getDestinationsList'
     ]),
-    // 跳转小程序
-    handleClickAtt(id) {
-      const [__id__, entityType, destination] = handleId(id)
-      const url = `att?id=${__id__}&entityType=${entityType}&destination=${destination}`
-      wx.miniProgram.navigateTo({ url })
-    },
     getWaits() {
-      // this.$createToast({
-      //   txt: '已更新'
-      // }).show()
+      Toast({
+        message: '已更新',
+        position: 'bottom',
+        duration: 3000
+      });
       this.$store.dispatch('getAttractionsWait')
     },
     change(val) {
       this.type = this.attTypeTab[val]['id']
     }
-
   },
   mounted() {
     const map = this.$refs.map.mapObject
@@ -156,10 +156,19 @@ export default {
       }
     }
     webdogTileLayer(url, options).addTo(map)
+
+    this.$nextTick(() => {
+      const wrapper = document.querySelector('.att-list-wrapper')
+      const scroll = new BScroll(wrapper)
+    })
   },
   created() {
-    this.$store.dispatch('getDestinationsList', 'attraction')
+    this.$store.dispatch('getDestinationsList')
     this.$store.dispatch('getSchedules')
+
+    setTimeout(() => {
+      this.$store.dispatch('getAttractionsWait')
+    }, 2000)
   }
 }
 </script>

@@ -13,22 +13,22 @@
     height: 58px;
   }
 
+  .att-waittime, .att-sechedules {
+    margin-top: 5px;
+  }
+
   &:active {
     background: #d9d9d9;
   }
 
-  &:not(:first-child) {
-    &:before {
-      setTopLine($color-light-grey-ss);
-      left: 16px;
-      right: 16px;
-    }
+  &:before {
+    setBottomLine($color-light-grey-ss);
+    left: 16px;
+    right: 16px;
   }
 
   &__hd {
     margin-right: 16px;
-    width: 64px;
-    height: 64px;
     text-align: center;
   }
 
@@ -53,25 +53,6 @@
   color: $color-grey;
   font-size: 14px;
   line-height: 1.25;
-
-  // .ellipsisLn(2);
-  &--time {
-    display: inline-block;
-    margin-right: 5px;
-  }
-}
-
-.att-list-item__wait {
-  margin-top: 3px;
-  font-size: 14px;
-  line-height: 1.25;
-  color: $color-primary;
-
-  .strong {
-    font-weight: 600;
-    font-size: 16px;
-    margin: 0 6px;
-  }
 }
 </style>
 <template>
@@ -82,7 +63,8 @@
     <div class="att-list-item__bd">
       <div class="att-list-item__title">{{data.name}}</div>
       <div class="att-list-item__desc">{{data.landName}}</div>
-      <!-- <att-waittime :item="item" :wait="waits[data.aid]"></att-waittime> -->
+      <att-waittime v-if="data.type === 'attraction'" :wait="wait"></att-waittime>
+      <att-schedules v-else :type="data.type" :schedules="schedules"></att-schedules>
     </div>
   </div>
 </template>
@@ -90,12 +72,14 @@
 <script>
 import AttWaittime from '@/components/Att/AttWaittime'
 import AttMedia from '@/components/Att/AttMedia'
-
+import AttSchedules from '@/components/Att/AttSchedules'
 export default {
-  components: { AttMedia, AttWaittime },
+  components: { AttMedia, AttWaittime, AttSchedules },
 
   props: {
-    data: Object
+    data: Object,
+    wait: Object,
+    schedules: Array,
   },
 
   data() {

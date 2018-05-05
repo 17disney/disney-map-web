@@ -3,20 +3,19 @@
 
 <template>
   <div class="att-list">
-    <att-list-item v-for="(item, index) in list" :key="index" :data="item" @click="clickAtt(item.id)"></att-list-item>
+    <att-list-item :data="item" :wait="waits[item.aid]" :schedules="schedules[item.aid]" v-for="(item, index) in list" :key="index" @click="handleClick"></att-list-item>
   </div>
 </template>
 
 <script>
+
 import moment from 'moment'
 import { handleId } from '@/utils/tool'
-import AttWaittime from '@/components/Att/AttWaittime'
-import AttMedia from '@/components/Att/AttMedia'
 import AttListItem from '@/components/AttList/AttListItem'
 
 export default {
   components: {
-    AttWaittime, AttMedia, AttListItem
+    AttListItem
   },
 
   props: {
@@ -36,12 +35,17 @@ export default {
     }
   },
 
-  computed: {},
+  mounted() {
+
+
+  },
+
 
   methods: {
-    clickAtt(id) {
-      let [__id__, entityType, destination] = handleId(id)
-      let url = `att?id=${__id__}&entityType=${entityType}&destination=${destination}`
+    handleClick(id) {
+      const [__id__, entityType, destination] = handleId(id)
+      const url = `att?id=${__id__}&entityType=${entityType}&destination=${destination}`
+      console.log(url)
       wx.miniProgram.navigateTo({ url })
     }
   }

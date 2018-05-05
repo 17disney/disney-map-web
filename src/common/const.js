@@ -47,13 +47,13 @@ const ATT_TYPE = [
     name: '洗手间',
     id: 'fadsgfad',
     icon: 'restrooms',
-    showTab: true
+    showTab: false
   },
   {
     name: '迪士尼乐拍通',
     id: 'fadsgfad3sadf2',
     icon: 'photo-pass-plus',
-    showTab: true
+    showTab: false
   },
   {
     name: '主题活动',
@@ -65,7 +65,7 @@ const ATT_TYPE = [
     name: '游客服务',
     id: 'evenadsfsfdt',
     icon: 'information',
-    showTab: true
+    showTab: false
   },
   {
     name: '酒店',
@@ -77,7 +77,7 @@ const ATT_TYPE = [
     name: '休闲活动',
     id: 'playsfd',
     icon: 'disneyland-recreation',
-    showTab: true
+    showTab: false
   }
 ]
 

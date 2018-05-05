@@ -65,32 +65,32 @@ const user = {
       data.forEach(item => {
         let { fpList, waitList, endTime } = item
 
-        if (fpList && fpList.length > 0) {
-          item.fpAvailable = true
-          let [utime, fpStartTime] = fpList[0]
-          item.fpStatus = true
-          item.fpUtime = utime
-          if (fpStartTime === 'FASTPASS is Not Available') {
-            item.fpStatus = false
-          } else {
-            item.fpStartTime = moment(fpStartTime, 'HH:mm:ss').format('H:mm')
+        // if (fpList && fpList.length > 0) {
+        //   item.fpAvailable = true
+        //   let [utime, fpStartTime] = fpList[0]
+        //   item.fpStatus = true
+        //   item.fpUtime = utime
+        //   if (fpStartTime === 'FASTPASS is Not Available') {
+        //     item.fpStatus = false
+        //   } else {
+        //     item.fpStartTime = moment(fpStartTime, 'HH:mm:ss').format('H:mm')
 
-            let fpEndTime = moment(fpStartTime, 'HH:mm:ss')
-              .add(1, 'h')
-              .format('H:mm')
-            if (fpEndTime > moment(endTime, 'HH:mm:ss')) {
-              fpEndTime = moment(endTime, 'HH:mm:ss').format('H:mm')
-            }
-            item.fpEndTime = fpEndTime
-          }
-        }
+        //     let fpEndTime = moment(fpStartTime, 'HH:mm:ss')
+        //       .add(1, 'h')
+        //       .format('H:mm')
+        //     if (fpEndTime > moment(endTime, 'HH:mm:ss')) {
+        //       fpEndTime = moment(endTime, 'HH:mm:ss').format('H:mm')
+        //     }
+        //     item.fpEndTime = fpEndTime
+        //   }
+        // }
 
-        if (waitList && waitList.length > 0) {
-          let [utime, postedWaitMinutes, status] = item.waitList[0]
-          item.status = status
-          item.utime = utime
-          item.postedWaitMinutes = postedWaitMinutes
-        }
+        // if (waitList && waitList.length > 0) {
+        //   let [utime, postedWaitMinutes, status] = item.waitList[0]
+        //   item.status = status
+        //   item.utime = utime
+        //   item.postedWaitMinutes = postedWaitMinutes
+        // }
         waits[item.id] = item
       })
 
@@ -134,7 +134,7 @@ const user = {
   },
   actions: {
     // 获取项目列表
-    async getDestinationsList({ commit, state }, type) {
+    async getDestinationsList({ commit, state }) {
       const data = await Waittimes.destinations(state.local)
       commit('SET_LIST', data)
     },
