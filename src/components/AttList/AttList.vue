@@ -43,10 +43,8 @@ export default {
 
   methods: {
     handleClick(id) {
-      const [__id__, entityType, destination] = handleId(id)
-      const url = `att?id=${__id__}&entityType=${entityType}&destination=${destination}`
-      console.log(url)
-      wx.miniProgram.navigateTo({ url })
+      this.$emit('click', id)
+
     }
   }
 }

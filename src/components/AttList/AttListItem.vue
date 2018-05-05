@@ -20,6 +20,9 @@
   &:active {
     background: #d9d9d9;
   }
+  &:hover {
+    background: #d9d9d9;
+  }
 
   &:before {
     setBottomLine($color-light-grey-ss);

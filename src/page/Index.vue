@@ -63,7 +63,7 @@
     </div>
     <div v-show="showMode == 'list'">
       <div class="att-list-wrapper">
-        <att-list class="content" :list="activeList" :waits="waits" :schedules="schedules"></att-list>
+        <att-list @click="handleClickAtt" class="content" :list="activeList" :waits="waits" :schedules="schedules"></att-list>
       </div>
     </div>
   </div>
@@ -113,7 +113,7 @@ export default {
       crsBaidu,
       type: 'attraction',
       hideTools: false,
-      showMode: 'map',
+      showMode: 'list',
       center: [31.1492, 121.6667],
       popupOption: {
         autoClose: false,
@@ -131,6 +131,12 @@ export default {
     ...mapActions([
       'getDestinationsList'
     ]),
+    handleClickAtt(id) {
+      const [__id__, entityType, destination] = handleId(id)
+      const url = `att?id=${__id__}&entityType=${entityType}&destination=${destination}`
+      console.log(url)
+      wx.miniProgram.navigateTo({ url })
+    },
     getWaits() {
       Toast({
         message: '已更新',
@@ -159,7 +165,9 @@ export default {
 
     this.$nextTick(() => {
       const wrapper = document.querySelector('.att-list-wrapper')
-      const scroll = new BScroll(wrapper)
+      const scroll = new BScroll(wrapper, {
+        click: true
+      })
     })
   },
   created() {
