@@ -113,7 +113,7 @@ export default {
       crsBaidu,
       type: 'attraction',
       hideTools: false,
-      showMode: 'list',
+      showMode: 'map',
       center: [31.1492, 121.6667],
       popupOption: {
         autoClose: false,
