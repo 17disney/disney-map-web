@@ -1,11 +1,9 @@
 import axios from 'axios'
-// MessageBox
-// import { Message } from 'element-ui'
 
 // 创建axios实例
 const service = axios.create({
   // baseURL: 'http://park-cn.17disney.com/api/v3', // process.env.BASE_API, // api的base_url
-  baseURL: '/',
+  baseURL: 'http://api.17disney.com/',
   timeout: 3000 // 请求超时时间
 })
 

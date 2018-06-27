@@ -3,15 +3,14 @@
 
 <template>
   <div class="att-list">
-    <att-list-item :data="item" :wait="waits[item.aid]" :schedules="schedules[item.aid]" v-for="(item, index) in list" :key="index" @click="handleClick"></att-list-item>
+    <slot></slot>
   </div>
 </template>
 
 <script>
-
 import moment from 'moment'
 import { handleId } from '@/utils/tool'
-import AttListItem from '@/components/AttList/AttListItem'
+import AttListItem from './AttListItem'
 
 export default {
   components: {
