@@ -20,7 +20,6 @@ Object.keys(Filters).forEach(key => {
   Vue.filter(key, Filters[key])
 })
 
-
 Vue.config.productionTip = false
 new Vue({
   el: '#app',
